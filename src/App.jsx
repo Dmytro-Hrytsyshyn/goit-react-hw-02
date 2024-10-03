@@ -6,18 +6,10 @@ import Options from "./components/Options/Options";
 import Notification from "./components/Notification/Notification";
 
 function App() {
-  const [feedback, setFeedback] = useState(
-    () => {
-      const val = localStorage.getItem("feedbackValue");
-      const parsedVal = JSON.parse(val) ?? 0;
-      return parsedVal;
-    },
-    {
-      good: 0,
-      neutral: 0,
-      bad: 0,
-    }
-  );
+  const [feedback, setFeedback] = useState(() => {
+    const val = localStorage.getItem("feedbackValue");
+    return val ? JSON.parse(val) : { good: 0, neutral: 0, bad: 0 };
+  });
 
   const updateFeedback = (feedbackType) => {
     setFeedback({ ...feedback, [feedbackType]: feedback[feedbackType] + 1 });
@@ -34,7 +26,7 @@ function App() {
   useEffect(() => {
     const stringifiedValue = JSON.stringify(feedback);
     localStorage.setItem("feedbackValue", stringifiedValue);
-  });
+  }, [feedback]);
 
   return (
     <div className={styles.app_container}>
